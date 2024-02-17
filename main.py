@@ -1,15 +1,13 @@
-# import xml.etree.ElementTree as ET
-#
-# root_node = ET.parse('all_grant.xml').getroot()
-#
-# for tag in root_node.findall('projects/project/title'):
-#     print(tag)
-from bs4 import BeautifulSoup
+from settings import get_settings
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+from db.database import User, Presentation
 
-file = open('all_grant.xml', 'r', encoding='utf-8')
-xml_file = file.read()
-soup = BeautifulSoup(xml_file, 'lxml')
-for tag in soup.find_all("project"):
-    print(tag)
-    print(tag.title)
-    print(tag.number)
+
+settings = get_settings()
+engine = create_engine(str(settings.DB_DSN))
+with Session(bind=engine) as session:
+    users = session.query(User).all()
+    print(len(users))
+    preses = session.query(Presentation).all()
+    print(len(preses))
