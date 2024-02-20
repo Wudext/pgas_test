@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-import re
 from datetime import datetime
 from settings import get_settings
 from sqlalchemy import create_engine

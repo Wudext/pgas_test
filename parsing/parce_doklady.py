@@ -13,7 +13,7 @@ with Session(bind=engine) as session:
         users = pres.creators
         for user in users:
             name = session.query(User).filter(User.irid == user).one_or_none().name
-            objects.append([name, user, len(users), pres.kind, str(pres.end), str(pres.created)])
+            objects.append([name, user, len(users), pres.kind, str(pres.end), str(pres.created), str(pres.presentationid), str(pres.title)])
 
 with xlsxwriter.Workbook('preses.xlsx') as workbook:
     worksheet = workbook.add_worksheet()

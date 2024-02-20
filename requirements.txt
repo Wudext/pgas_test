@@ -2,3 +2,7 @@ sqlalchemy
 bs4
 lxml
 xlsxwriter
+alembic
+pydantic
+pydantic_settings
+psycopg2
