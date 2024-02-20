@@ -45,3 +45,5 @@ with Session(bind=engine) as session:
         )
         session.add(presentation)
         session.commit()
+
+        irids = []

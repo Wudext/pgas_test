@@ -38,3 +38,5 @@ with Session(bind=engine) as session:
         )
         session.add(patent)
         session.commit()
+
+        irids = []
