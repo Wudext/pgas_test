@@ -1,5 +1,4 @@
 """Init
-
 Revision ID: decdba2d944d
 Revises: 
 Create Date: 2024-02-20 11:26:54.022149
@@ -7,6 +6,7 @@ Create Date: 2024-02-20 11:26:54.022149
 """
 from alembic import op
 import sqlalchemy as sa
+import sqlalchemy_utils
 
 
 # revision identifiers, used by Alembic.

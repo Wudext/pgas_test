@@ -16,7 +16,6 @@ settings = get_settings()
 engine = create_engine(str(settings.DB_DSN))
 with Session(bind=engine) as session:
     for tag in soup.find_all("presentation"):
-        preses.append(tag)
         for creator in tag.find_all("creator"):
             result = re.match(r"([а-яА-Яa-zA-Zё .]+)(\d+)", creator.text)
             if not (result is None):
