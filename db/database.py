@@ -61,19 +61,28 @@ class Article(Base):
     publicationDate: Mapped[str] = mapped_column(String)
     url: Mapped[str] = mapped_column(URLType)
     publicationID: Mapped[str] = mapped_column(String)
-    is_vak: Mapped[bool] = mapped_column(Boolean)
-    is_WoS: Mapped[bool] = mapped_column(Boolean)
-    is_Scopus: Mapped[bool] = mapped_column(Boolean)
-    is_RINC: Mapped[bool] = mapped_column(Boolean)
+    is_vak: Mapped[str] = mapped_column(String)
+    is_WoS: Mapped[str] = mapped_column(String)
+    is_Scopus: Mapped[str] = mapped_column(String)
+    is_RINC: Mapped[str] = mapped_column(String)
 
     val_WoS: Mapped[int] = mapped_column(Integer, nullable=True)
     val_Scopus: Mapped[int] = mapped_column(Integer, nullable=True)
     created: Mapped[datetime] = mapped_column(DateTime)
     attachments: Mapped[str] = mapped_column(String, nullable=True)
+    creators: Mapped[list[int]] = mapped_column(ARRAY(Integer))
 
-    users: Mapped[list[User]] = relationship(
-        "User", secondary="articles_users", back_populates="articles"
-    )
+
+class Grant(Base):
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String)
+    number: Mapped[str] = mapped_column(String)
+    dates_begin: Mapped[datetime] = mapped_column(DateTime)
+    dates_end: Mapped[datetime] = mapped_column(DateTime)
+    department: Mapped[str] = mapped_column(String)
+    value: Mapped[int] = mapped_column(Integer)
+    created: Mapped[datetime] = mapped_column(DateTime)
+    creators: Mapped[list[int]] = mapped_column(ARRAY(Integer))
 
 
 class User(Base):
@@ -82,18 +91,3 @@ class User(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     irid: Mapped[int] = mapped_column(Integer, unique=True)
     name: Mapped[str] = mapped_column(String)
-
-# class PresUser(Base):
-#     __tablename__ = "presentations_users"
-#
-#     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-#     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
-#     project_id: Mapped[int] = mapped_column(Integer, ForeignKey("presentations.id"))
-#
-#
-# class PatentUser(Base):
-#     __tablename__ = "patents_users"
-#
-#     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-#     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
-#     patent_id: Mapped[int] = mapped_column(Integer, ForeignKey("patents.id"))

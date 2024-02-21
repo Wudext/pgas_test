@@ -19,12 +19,15 @@ with Session(bind=engine) as session:
         for creator in tag.find_all("creator"):
             result = re.match(r"([а-яА-Яa-zA-Zё .]+)(\d+)", creator.text)
             if not (result is None):
+                creators_db = [int(user.irid) for user in session.query(User).all()]
                 if int(result[2]) not in irids:
                     irids.append(int(result[2]))
-                    user = User(name=result[1], irid=int(result[2]))
-                    creators_db.append(user)
-                    # session.add(user)
-                    # session.commit()
+                if int(result[2]) not in creators_db:
+                    session.add(User(
+                        irid=int(result[2]),
+                        name=result[1]
+                    ))
+                    session.commit()
 
         article = Article(
             title=tag.title.text,
@@ -38,15 +41,17 @@ with Session(bind=engine) as session:
             publicationDate=tag.publicationDate.text,
             publicationID=tag.ID.text,
             url=tag.url.text,
-            is_vak=bool(tag.is_vak.text),
-            is_WoS=bool(tag.is_WoS.text),
-            is_Scopus=bool(tag.is_Scopus.text),
-            is_RINC=bool(tag.is_RINC.text),
-            val_WoS=int(tag.val_WoS.text) if tag.is_WoS else None,
-            val_Scopus=int(tag.val_WoS.text) if tag.is_WoS else None,
+            is_vak=tag.is_vak.text,
+            is_WoS=tag.is_WoS.text,
+            is_Scopus=tag.is_Scopus.text,
+            is_RINC=tag.is_RINC.text,
+            val_WoS=int(tag.val_WoS.text) if tag.val_WoS else None,
+            val_Scopus=int(tag.val_Scopus.text) if tag.val_Scopus else None,
             created=datetime.strptime(tag.created.text, '%Y-%m-%d %H:%M:%S'),
             attachments=tag.attachments.text if tag.attachments else None,
-            users=creators_db
+            creators=irids
         )
         session.add(article)
         session.commit()
+
+        irids = []
