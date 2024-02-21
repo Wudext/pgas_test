@@ -8,7 +8,6 @@ from db.database import User, Presentation
 
 irids = list()
 creators_db = list()
-preses = list()
 
 file = open("all_doklady.xml", "r", encoding="utf-8")
 xml_file = file.read()
@@ -17,7 +16,6 @@ settings = get_settings()
 engine = create_engine(str(settings.DB_DSN))
 with Session(bind=engine) as session:
     for tag in soup.find_all("presentation"):
-        preses.append(tag)
         for creator in tag.find_all("creator"):
             result = re.match(r"([а-яА-Яa-zA-Zё .]+)(\d+)", creator.text)
             if not (result is None):
@@ -37,10 +35,8 @@ with Session(bind=engine) as session:
             kind=tag.kind.text,
             presentationid=tag.presentationid.text,
             confid=tag.confid.text,
-            created=datetime.strptime(tag.created.text, '%Y-%m-%d %H:%M:%S')
+            created=datetime.strptime(tag.created.text, '%Y-%m-%d %H:%M:%S'),
+            users=creators_db
         )
         session.add(presentation)
-        session.commit()
-
-        presentation.users = creators_db
         session.commit()

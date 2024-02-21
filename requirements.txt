@@ -1,3 +1,4 @@
 sqlalchemy
 bs4
 lxml
+sqlalchemy-utils
