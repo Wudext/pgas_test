@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from db.database import User, Presentation
 
 irids = list()
-creators_db = list()
+preses = list()
 
 file = open("all_doklady.xml", "r", encoding="utf-8")
 xml_file = file.read()
@@ -19,12 +19,16 @@ with Session(bind=engine) as session:
         for creator in tag.find_all("creator"):
             result = re.match(r"([а-яА-Яa-zA-Zё .]+)(\d+)", creator.text)
             if not (result is None):
-                if result[2] not in irids:
-                    irids.append(result[2])
-                    user = User(name=result[1], irid=result[2])
-                    creators_db.append(user)
-                    session.add(user)
+                creators_db = [int(user.irid) for user in session.query(User).all()]
+                if int(result[2]) not in irids:
+                    irids.append(int(result[2]))
+                if int(result[2]) not in creators_db:
+                    session.add(User(
+                        irid=int(result[2]),
+                        name=result[1]
+                    ))
                     session.commit()
+
         presentation = Presentation(
             title=tag.title.text,
             conference=tag.conference.text,
@@ -36,7 +40,9 @@ with Session(bind=engine) as session:
             presentationid=tag.presentationid.text,
             confid=tag.confid.text,
             created=datetime.strptime(tag.created.text, '%Y-%m-%d %H:%M:%S'),
-            users=creators_db
+            creators=irids
         )
         session.add(presentation)
         session.commit()
+
+        irids = []

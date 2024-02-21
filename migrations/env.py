@@ -4,7 +4,7 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from db.base import Base
-from db.database import Presentation, ArtUser, User
+from db.database import Presentation, User, Patent
 from settings import get_settings
 
 config = context.config
